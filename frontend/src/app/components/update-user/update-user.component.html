@@ -32,6 +32,14 @@
         <input id="email" formControlName="email" type="email" class="form-control" [placeholder]="user?.email" required>
       </div>
 
+      <!-- Number -->
+      <div class="row">
+        <div class="col-md-12 form-group mb-3">
+          <label for="number" class="form-label">Number</label>
+          <input id="number" formControlName="number" type="text" class="form-control" [placeholder]="user?.number" required>
+        </div>
+      </div>
+
       <!-- Submit Button -->
       <div class="form-group">
         <button [disabled]="!form.valid" class="btn btn-primary w-100" type="submit">Update</button>
