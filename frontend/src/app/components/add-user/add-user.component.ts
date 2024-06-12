@@ -1,39 +1,33 @@
-import { Component } from '@angular/core';
-import { UserService } from 'src/app/app.service';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/app.service';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css']
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   
-    constructor(private service: UserService, private router: Router) { }
-  
-    ngOnInit(): void {
-    }
+  form: FormGroup;
 
-    data: any
-
-    form = new FormGroup({
+  constructor(private userService: UserService, private router: Router) { 
+    this.form = new FormGroup({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
       gender: new FormControl('', Validators.required)
     });
+  }
 
-    addUser() {
-      this.data = this.form.value;
-      this.service.addUser(this.data).subscribe(data => {
-        // redirect to home page
+  ngOnInit(): void {}
+
+  addUser(): void {
+    if (this.form.valid) {
+      const userData = this.form.value;
+      this.userService.addUser(userData).subscribe(() => {
         this.router.navigate(['/']);
       });
     }
-
-    
-
-    
-
-
+  }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/app.service';
@@ -9,38 +9,43 @@ import { User } from 'src/app/User';
   templateUrl: './update-user.component.html',
   styleUrls: ['./update-user.component.css']
 })
-export class UpdateUserComponent {
+export class UpdateUserComponent implements OnInit {
 
-  user?: any
-  data: any
+  user?: User;
+  form: FormGroup;
 
-
-  constructor(private service: UserService, private route: ActivatedRoute, private router : Router) { }
+  constructor(
+    private userService: UserService, 
+    private route: ActivatedRoute, 
+    private router: Router
+  ) { 
+    this.form = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+    });
+  }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.params['id'];
-    this.service.getUser(id).subscribe(data => {
-      this.user = data
-      console.log(this.user)
-    })
+    const id = this.route.snapshot.params['id'];
+    this.userService.getUser(id).subscribe(data => {
+      this.user = data;
+      this.form.patchValue({
+        name: this.user.name,
+        email: this.user.email
+      });
+    });
   }
 
-  form = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-  })
+  submit(): void {
+    if (this.form.valid && this.user) {
+      const updatedUser: User = {
+        ...this.user,
+        ...this.form.value
+      };
 
-  submit(){
-    this.data = this.form.value
-    this.user.name = this.data.name
-    this.user.email = this.data.email
-    console.log(this.data)
-    
-    this.service.updateUser(this.user?.id, this.user).subscribe(data => {
-      console.log(data)
-    })
-
-    this.router.navigate(['/']);
+      this.userService.updateUser(this.user.id, updatedUser).subscribe(() => {
+        this.router.navigate(['/']);
+      });
+    }
   }
-
 }

@@ -8,33 +8,32 @@ import { UserService } from '../../app.service';
   templateUrl: './view-user.component.html',
   styleUrls: ['./view-user.component.css']
 })
-export class ViewUserComponent {
-  users: any | undefined;
+export class ViewUserComponent implements OnInit {
+  users: User[] = [];
 
-  constructor(private userService: UserService) { 
-   
-  }
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  loadUsers(): void {
     this.userService.getUsers().subscribe(data => {
       this.users = data;
-      console.log("Data initial",data)
     });
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id).subscribe(data => {
-      console.log("Data after delete",data);
-      this.ngOnInit();
+  deleteUser(id: number): void {
+    this.userService.deleteUser(id).subscribe(() => {
+      this.loadUsers();
     });
   }
 
-  sendEmail(id: number) {
+  sendEmail(id: number): void {
     this.userService.sendEmail(id).subscribe(response => {
-      console.log("Email envoyé", response);
+      console.log("Email sent", response);
     }, error => {
-      console.error("Erreur lors de l'envoi de l'email", error);
+      console.error("Error sending email", error);
     });
   }
-
 }
