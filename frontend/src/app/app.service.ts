@@ -31,4 +31,9 @@ export class UserService {
     return this.http.delete<User>(`${this.url}${id}/`);
   }
 
+  sendEmail(id: number): Observable<any> {
+    console.log("Sending email to user with id", id);
+    return this.http.post(`${this.url}send-email/${id}/`, {});
+  }
+
 }
