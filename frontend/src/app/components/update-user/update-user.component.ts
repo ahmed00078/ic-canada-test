@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/app.service';
 import { User } from 'src/app/User';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-update-user',
@@ -46,7 +47,20 @@ export class UpdateUserComponent implements OnInit {
       };
 
       this.userService.updateUser(this.user.id, updatedUser).subscribe(() => {
+        Swal.fire({
+          title: 'User Updated!',
+          text: 'The user has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
         this.router.navigate(['/']);
+      }, error => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'There was an error updating the user.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
     }
   }
