@@ -22,6 +22,7 @@ export class UpdateUserComponent implements OnInit {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
+      number: new FormControl('', [Validators.required]),
     });
   }
 
@@ -31,7 +32,8 @@ export class UpdateUserComponent implements OnInit {
       this.user = data;
       this.form.patchValue({
         name: this.user.name,
-        email: this.user.email
+        email: this.user.email,
+        number: this.user.number
       });
     });
   }

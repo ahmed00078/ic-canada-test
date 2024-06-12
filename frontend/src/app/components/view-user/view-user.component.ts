@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { User } from 'src/app/User';
 import { UserService } from '../../app.service';
 
 @Component({
@@ -9,29 +7,24 @@ import { UserService } from '../../app.service';
   styleUrls: ['./view-user.component.css']
 })
 export class ViewUserComponent implements OnInit {
-  users: User[] = [];
+  users: any | undefined;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.loadUsers();
-  }
-
-  loadUsers(): void {
     this.userService.getUsers().subscribe(data => {
       this.users = data;
     });
   }
 
   deleteUser(id: number): void {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.loadUsers();
+    this.userService.deleteUser(id).subscribe(data => {
+      this.ngOnInit();
     });
   }
 
   sendEmail(id: number): void {
     this.userService.sendEmail(id).subscribe(response => {
-      console.log("Email sent", response);
     }, error => {
       console.error("Error sending email", error);
     });
