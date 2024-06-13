@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/app.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-user',
@@ -28,6 +29,12 @@ export class AddUserComponent implements OnInit {
       const userData = this.form.value;
       this.userService.addUser(userData).subscribe(() => {
         this.router.navigate(['/']);
+        Swal.fire({
+          title: 'User Added!',
+          text: 'The new user has been added successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
       });
     }
   }
